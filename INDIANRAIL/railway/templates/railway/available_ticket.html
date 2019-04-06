@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Ticket</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+		input[type=text]#ip1{
+			    height: 42px;
+			    border: 2px solid #ECECEC;
+			    width: 180px;
+			    padding-left: 15px;
+			    font-family: "IBMPlexSansSemiBold";
+			    padding-right: 0px;
+			    font-size: 19px;
+			    color: #000000;
+				background-color: #FDFDFD;}
+				
+		@media print {
+		    #printbtn {
+		        display :  none;
+		    }}
+	</style>
+</head>
+
+<body>
+{% block content %}
+<div id="wrapper">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Available Ticket Information</a>
+
+        </div>
+    </nav>
+	<br>
+    <div class="row">
+        <div class="col-md-10">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th><span>TICKET_NBR</span></th>
+                    <th><span>DATE_OF_JOURNEY</span></th>
+                    <th><span>BERTH_TYPE</span></th>
+					<th><span>STATUS_CODE</span></th>
+					<th><span>COACH_NBR</span></th>
+                </tr>
+                </thead>
+
+
+                <tbody>
+	                {% for row in data %}
+		                <tr>
+		                    <td>{{row.TICKET_NBR}}</td>
+		                    <td>{{row.DATE_OF_JOURNEY}}</td>
+		                    <td>{{row.BERTH_TYPE}}</td>
+		                    <td>{{row.STATUS_CODE}}</td>
+		                    <td>{{row.COACH_NBR}}</td>
+		                </tr>
+	                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<label for="total">Total Available Ticket : </label> {{total_available_ticket}}
+
+<input type="button" id='printbtn' value="Print" onclick="printpage()">
+
+<script>
+function printpage()
+  {
+  window.print()
+  }
+</script>
+<script>
+	    $(document).ready(function() {
+	    $('#example1').DataTable();	} );
+
+</script>
+
+{% endblock %}
+
+
+</body>
+</html>

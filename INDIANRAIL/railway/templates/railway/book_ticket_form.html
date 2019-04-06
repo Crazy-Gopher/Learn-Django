@@ -1,0 +1,84 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<form id = 'book_ticket_form' action="" method="post">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    </table>
+
+    <div class="line"><label for="full_name">Full Name *: </label><input type="text" id="full_name" /></div>
+    <div class="line"><label for="date_of_journey">Date of Journey YYYY-MM-DD*: </label><input type="text" id="date_of_journey" /></div>
+    <div class="line"><label for="age">Age *: </label><input type="text" id="age" /></div>
+    
+     <div class="line">
+     <label for="gender">Gender *: </label>
+     <input type="radio" id="gender" name="gender" value="MALE" checked >Male
+      <input type="radio" id="gender" name="gender" value="FEMALE" checked >Female
+       <input type="radio" id="gender" name="gender" value="OTHER" checked >Other
+      </div> 
+     
+     
+     <div class="line">
+     <label for="preference">Berth Preference *: </label>
+     <input type="radio" id="preference" name="preference" value="LOWER" checked >Lower
+      <input type="radio" id="preference" name="preference" value="MIDDLE" checked >Middle
+       <input type="radio" id="preference" name="preference" value="UPPER" checked >Upper
+       <input type="radio" id="preference" name="preference" value="SIDE" checked >Side
+      </div> 
+       
+	<div class="line"><label for="with_child">With Child Yes/No *: </label><input type="text" id="with_child" /></div>
+			
+    <div class="line submit"><input type="submit" value="Submit" /></div>
+
+    <p>Note: Please make sure your details are correct before submitting form and that all fields marked with * are completed!.</p>
+
+</form>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+function my_fun(data){
+alert(data);
+}
+</script>
+  
+  
+<script type="text/javascript">
+$(document).on
+(
+'submit','#book_ticket_form', function(e)
+{
+	e.preventDefault();
+$.ajax
+(
+{
+    url: "book/",
+    type: "POST",
+	data: { full_name : $('#full_name').val(),	
+	date_of_journey : $('#date_of_journey').val(), 
+	age : $('#age').val(),
+	gender : $('#gender').val(),
+	preference : $("#preference").val(),
+	with_child : $('#with_child').val(),
+	'csrfmiddlewaretoken': '{{csrf_token}}',},
+	dataType: "json",
+    complete: function() {},
+    success: function(returned_data) { alert('Successfully booked ticket, Ticket Numder is : ' + returned_data.ticket_nbr); },
+    error: function(returned_data) { alert(returned_data);}
+}
+)
+  
+}
+)
+</script>
+
+{% endblock %}
