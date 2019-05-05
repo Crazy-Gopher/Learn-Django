@@ -65,12 +65,13 @@ Django Architecture:
 1. Does Django Follow Architectural pattern?
 Yes, Django follows Model-View-Controller (MVC) architectural pattern.
 
-2.  Mention the architecture of Django architecture?
-Django architecture consists of
+3.Explain the architecture of Django?
+Answer:
+Django architecture consists of:
 Models: It describes your database schema and your data structure
 Views: It controls what a user sees, the view retrieves data from appropriate models and execute any calculation made to the data and pass it to the template
 Templates: It determines how the user sees it. It describes how the data received from the views should be changed or formatted for display on the page
-Controller: The Django framework and URL parsing. I controls which views should call for each urls.
+Controller: It is the heart of the system. It handles request and responses, setting up database connections and loading add-ons and specifies Django framework and URL parsing.
 
 7. What does the Django templates contain?
 A template is a simple text file. It can create any text-based format like XML, CSV, HTML, etc. A template contains variables that get replaced with values when the template is evaluated and tags (%tag%) that control the logic of the template.
@@ -134,6 +135,17 @@ It specifies the database column type.
 It also specifies the default HTML widget which is availed while we render the form field.
 The requirements of the minimal validation which is used in Django admin is also specified by the field class.
 
+12) Explain the migration in Django and how you can do in SQL?
+Migration in Django is to make changes to your models like deleting a model, adding a field, etc. into your database schema.  There are several commands you use to interact with migrations.
+Migrate
+Makemigrations
+Sqlmigrate
+To do the migration in SQL, you have to print the SQL statement for resetting sequences for a given app name.
+
+django-admin.py sqlsequencreset
+
+Use this command to generate SQL that will fix cases where a sequence is out sync with its automatically incremented field data.
+
 4. Where are Django migrations stored?
 You can think Django Migrations as version control system for your database/Model. It keeps track of changes done in your application Models/Table like adding a field, deleting a model, etc. Migrations in Django are stored as an on-disk format, referred to here as “migration files”. These files are actually just normal Python files with an agreed-upon object layout, written in a declarative style. A basic migration file looks like this:
 
@@ -150,11 +162,11 @@ class Migration(migrations.Migration):
 	
 Further Reading https://docs.djangoproject.com/en/2.0/topics/migrations/
 
-5. List type of inheritance supported in Django?
-Django supports 3 types of inheritance. They are
-Abstract base classes
-Multi-table Inheritance
-Proxy models
+5) List out the inheritance styles in Django?
+In Django, there is three possible inheritance styles
+Abstract base classes: This style is used when you only wants parent’s class to hold information that you don’t want to type out for each child model
+Multi-table Inheritance: This style is used If you are sub-classing an existing model and need each model to have its own database table
+Proxy models: You can use this model, If you only want to modify the Python level behavior of the model, without changing the model’s fields
 
 6. List the database backends supported by Django Framework?
 Django officially supports four database backends, they are
@@ -169,9 +181,34 @@ Microsoft SQL Server
 Firebird
 ODBC
 
+1. What is the difference between get() and filter() methods of a django queryset object?
+get() will fetch a single object whereas a filter() query will return multiple objects from the database using the lookup parameters. get() raises exceptions when the number of objects found is not equal to 1.
 
+2. What is meant by lazy evaluation of a queryset?
+Django querysets doesn’t get evaluated straight off. Querysets will only be evaluated when they are actually needed, which means even if we add filter after filter to a queryset, it still wont run the actual query on the database. This behaviour optimizes the usage of the database to a great deal.
 
 Middlewares:
+What is the use of middlewares in django? How to write a custom middleware?
+Middlewares are used to hook certain actions in the request response cycle. Middlewares can be used to perform operations on the request object before the view is executed or after the response object is created or just before the view is executed. Middlewares are executed in the order they are written in the settings file for django.
+
+Writing a custom middleware
+from datetime import datetime
+class BenchmarkMiddleware(object):
+    def process_request(self, request):
+        request._request_time = datetime.now()
+    def process_template_response(self, request, response):
+        response_time = request._request_time - datetime.now()
+        response.context_data['response_time'] = abs(response_time)
+        return response
+
+10.What is the usage of middlewares in Django?
+Answer:
+Below are the usage of middlewares in Django:
+•Session management
+•Cross-site request forgery protection
+•Use authentication
+•Content Gzipping
+
 7. What is some typical usage of middlewares in Django?
 Middleware is a function that acts on or transforms a request/response before/after it passes through the view layer (e.g. adding the user object to the request)
 Some usage of middlewares in Django is:
@@ -194,6 +231,20 @@ del request.session['key']
 15. How to use file based sessions?
 You have to set the SESSION_ENGINE settings to “django.contrib.sessions.backends.file” to use file-based session.
 
+25) What is the role of Cookie in Django?
+A cookie is a small piece of information which is stored in the client browser. It is used to store user's data in a file permanently (or for the specified time). Cookie has its expiry date and time and removes automatically when gets expire. Django provides built-in methods to set and fetch cookie.
+The set_cookie() method is used to set a cookie and get() method is used to get the cookie.
+The request.COOKIES['key'] array can also be used to get cookie values.
+from django.shortcuts import render  
+from django.http import HttpResponse  
+def setcookie(request):  
+    response = HttpResponse("Cookie Set")  
+    response.set_cookie('java-tutorial', 'javatpoint.com')  
+    return response  
+def getcookie(request):  
+    tutorial  = request.COOKIES['java-tutorial']  
+    return HttpResponse("java tutorials @: "+  tutorial);  
+
 
 Caching:
 3. List some caching strategies that you know in Django!
@@ -212,6 +263,25 @@ pre_save and post_save.
 pre_delete and post_delete
 pre_request and post_request
 pre_request and post_request
+
+11.What are the roles of receiver and sender in signals? or  What are the two important parameters in signals?
+Answer:
+The roles of receiver and sender in signals are:
+Receiver: It specifies the callback function which will be connected to the signal.
+Sender: It specifies a particular sender to receive a signal from.
+
+What are django signals? Give an example of post_save and pre_save signals.
+Django signals are used to notify other systems that certain actions have occurred at a point in the system, so that the other systems can act on them. In a simpler way, a sender notifies other receivers that have been registered with the sender that some action has taken place.
+There are a whole bunch of signals that can be setup which django provides. Signals can be pre save/post save signals on models, request started/request finished signals, pre migrate/post migrate signals on migrations among a big list of signals.
+Example of post save/post save signals
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from polls.models import MyModel
+
+@receiver(post_save, sender=MyModel, dispatch_uid="mymodel_post_save")
+def my_model_handler(sender, **kwargs):
+  print('Saved: {}'.format(kwargs['instance'].__dict__))
+
 
 Settings:
 11. How can you set up static files in Django?
@@ -233,3 +303,38 @@ You can use {{ request.path }} and {{ request.get_full_path }} to get current pa
 
 5. When QuerySets are evaluated in Django?
 In Django, a QuerySet can be evaluated in Iteration, Slicing, Pickling/Caching, repr(),len(), list() and bool().
+
+13) Mention what command line can be used to load data into Django?
+To load data into Django you have to use the command line Django-admin.py loaddata. The command line will searches the data and loads the contents of the named fixtures into the database.
+
+14) Explain what does django-admin.py makemessages command is used for?
+This command line executes over the entire source tree of the current directory and abstracts all the strings marked for translation.  It makes a message file in the locale directory.
+
+15. How can you fetch data from different databases inside the same view?
+While using a django queryset, the using(alias) function can be use to specify the database to fetch the query from. `alias` here refers to the db alias that is setup in the settings.DATABASES dictionary.
+
+1. What is model manager? Give an example.
+
+A Manager is an interface which provides database query operations to django models. A manager can be used to change the way a queryset behaves by adding custom operations on the queries.
+
+from django.db import models
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.name
+
+1. What is ORM? How it’s Important?
+2. How to write custom middleware in Django? give one sample( you can use IP filtering for the example)
+3. What is Decorator? How to write custom decorator in Django ? Give one sample
+What is the Usage of ALLOWED_HOST in Django project settings?
+What is Queryset? what is the instance? (all, filter and get)?
+Do you know about model Manager in Django? Can we write custom manager? How and why?
+What is __init__ method do in models?
+What is the difference between Function based and Class-based views?
+What is serialization?
+What’s the difference between select_related and prefetch_related in Django ORM?
+What all basic request methods? Difference between POST & PUT
+Difference between Django’s annotate and aggregate methods?
+What is CSRF? How it’s preventing in Django?
