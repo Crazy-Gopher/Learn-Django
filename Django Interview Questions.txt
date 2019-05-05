@@ -272,10 +272,22 @@ Signals:
 1. What are signals in Django?
 Signal are inbuilt utility in Django. They allow to execute some piece of code based on some action or event is occurred in framework something like a new user register, on delete of a record.
 Below is the list of some inbuilt signal in Django.
-pre_save and post_save.
-pre_delete and post_delete
-pre_request and post_request
-pre_request and post_request
+django.db.models.signals.pre_save & django.db.models.signals.post_save
+Sent before or after a model’s save() method is called.
+django.db.models.signals.pre_delete & django.db.models.signals.post_delete
+Sent before or after a model’s delete() method or queryset’s delete() method is called.
+django.db.models.signals.m2m_changed
+Sent when a ManyToManyField on a model is changed.
+django.core.signals.request_started & django.core.signals.request_finished
+Sent when Django starts or finishes an HTTP request.
+Example:
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    instance.profile.save()
+
 
 2.What are the roles of receiver and sender in signals? or  What are the two important parameters in signals?
 Answer:
@@ -294,6 +306,52 @@ from polls.models import MyModel
 @receiver(post_save, sender=MyModel, dispatch_uid="mymodel_post_save")
 def my_model_handler(sender, **kwargs):
   print('Saved: {}'.format(kwargs['instance'].__dict__))
+
+Custom signals:
+class Author(models.Model):
+    full_name = models.CharField(max_length=100)
+    short_name = models.CharField(max_length=50)
+
+class Book(models.Model):
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100)
+    content = model.TextField()
+    status = models.CharField(max_length=10, default=”Drafted”)
+    author_id = model.PositiveIntegerField(null=True)
+In the above two models we are not having an author as foreignKey to Book model, so by default when the Author gets deleted it won’t delete all the Books written by the author. This is the case where signals come to picture, we can achieve this by using pre_delete or post_delete signals.
+
+
+signals.py
+import django.dispatch
+#user_signup_success
+user_email_changed = django.dispatch.Signal(providing_args=['user',])
+
+#sender
+user_email_changed.send(sender=update_user, user=user)
+
+#receiver
+@receiver(user_email_changed)
+def user_email_changed_verification(user, **kwargs):
+    send_verification_email.delay(
+            user, verification_attempt, reverify=True)
+			
+			
+# In signals.py
+import django.dispatch
+book_publised = django.dispatch.Signal(providing_args=["book", “author”])
+
+# In receivers.py
+from django.dispatch import receiver
+from .signals import *
+
+@receiver(book_publised)
+def send_mail_on_publish(sender, **kwargs):
+    # contains the logic to send the email to author.
+	
+We can dispatch signal anywhere as following.
+book_published.send(sender=Book, book=<Book Instance>, user=<Author Instance>)
+https://micropyramid.com/blog/using-djangos-built-in-signals-and-writing-custom-signals/
+
 
 
 Settings:
