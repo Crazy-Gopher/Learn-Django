@@ -1,1 +1,108 @@
 Importent Django Topics and Interview Questions: 
+
+Installation and setup:
+13. How to check installed version of Django?
+By running below command on Terminal.You can check installed version of Django Framework.
+py -m django --version
+
+
+
+Basics of Django:
+11. What is the name of the Foundation which manages Django web framework?
+Django web framework is managed and maintained by an independent and non-profit organization named Django Software Foundation (DSF).
+
+9. Is Django a high level or low-level framework?
+Django is a high-level Python’s web framework which was designed for rapid development and clean realistic design.
+
+
+
+Django Architecture:
+1. Does Django Follow Architectural pattern?
+Yes, Django follows Model-View-Controller (MVC) architectural pattern.
+
+2.  Mention the architecture of Django architecture?
+Django architecture consists of
+Models: It describes your database schema and your data structure
+Views: It controls what a user sees, the view retrieves data from appropriate models and execute any calculation made to the data and pass it to the template
+Templates: It determines how the user sees it. It describes how the data received from the views should be changed or formatted for display on the page
+Controller: The Django framework and URL parsing. I controls which views should call for each urls.
+
+7. What does the Django templates contain?
+A template is a simple text file. It can create any text-based format like XML, CSV, HTML, etc. A template contains variables that get replaced with values when the template is evaluated and tags (%tag%) that control the logic of the template.
+
+3. What is the usage of Django-admin.py and manage.py?
+Django-admin.py: It is a Django’s command line utility for administrative tasks.Manage.py: It is an automatically created file in each Django project. It is a thin wrapper around the Django-admin.py. It has the following usage:
+It puts your project’s package on sys.path.
+It sets the DJANGO_SETTING_MODULE environment variable to points to your project’s setting.py file.
+
+
+
+Request and Response:
+4. How a request is processed in Django?
+In Django whenever a request is made by a user, it goes through the following steps:
+
+Django determines the root URLconf module to use. Ordinarily, this is the value of the ROOT_URLCONF setting, but if the incoming HttpRequest object has a urlconf attribute (set by middleware), its value will be used in place of the ROOT_URLCONF setting.
+Django loads that Python module and looks for the variable urlpatterns. This should be a Python list of django.urls.path() and/or django.urls.re_path() instances.
+Django runs through each URL pattern, in order, and stops at the first one that matches the requested URL.
+Once one of the URL patterns matches, Django imports and calls the given view, which is a simple Python function (or a class-based view). The view gets passed the following arguments:
+An instance of HttpRequest.
+If the matched URL pattern returned no named groups, then the matches from the regular expression are provided as positional arguments.
+The keyword arguments are made up of any named parts matched by the path expression, overridden by any arguments specified in the optional kwargs argument to django.urls.path() or django.urls.re_path().
+If no URL pattern matches, or if an exception is raised during any point in this process, Django invokes an appropriate error-handling view.
+
+
+
+Models and Migrations:
+4. Where are Django migrations stored?
+You can think Django Migrations as version control system for your database/Model. It keeps track of changes done in your application Models/Table like adding a field, deleting a model, etc. Migrations in Django are stored as an on-disk format, referred to here as “migration files”. These files are actually just normal Python files with an agreed-upon object layout, written in a declarative style. A basic migration file looks like this:
+
+from django.db import migrations, models
+
+class Migration(migrations.Migration):
+
+    dependencies = [('migrations', '0001_initial')]
+
+    operations = [
+        migrations.DeleteModel('Tribble'),
+        migrations.AddField('Author', 'rating', models.IntegerField(default=0)),
+    ]
+	
+Further Reading https://docs.djangoproject.com/en/2.0/topics/migrations/
+
+5. List type of inheritance supported in Django?
+Django supports 3 types of inheritance. They are
+
+Abstract base classes
+Multi-table Inheritance
+Proxy models
+
+
+Middlewares:
+a. Session:
+10. What is the use of session framework in Django?
+The session framework helps you in storing and retrieving arbitrary data on a per-site visitor basis. The data is stored on the server side and abstracts the receiving and sending of cookies. We can implement sessions through a piece of middleware.
+
+6. How to set/unset session in Django?
+Setting Session in Django
+
+request.session['key'] = 'value'
+Unset Session in Django
+
+del request.session['key']
+
+
+Caching:
+3. List some caching strategies that you know in Django!
+Few caching strategies that are available in Django are as follows:
+
+File system caching
+In-memory caching
+Using Memcached
+Database caching
+
+
+Custom features:
+15. How to create an Constant in Django.
+To create a constant in Django. Open your settings.py file and add a variable like MY_CONST = “MY_VALUE”.
+To use this constant in your views simply import setting like “Import settings in views.py” and use it as
+settings.MY_CONST
