@@ -1,18 +1,63 @@
 Importent Django Topics and Interview Questions: 
 
 Installation and setup:
+10. What is recommended way to install Django?
+Installing using pip is the recommended way to install Django Framework. Below are the steps to install official release of Django with pip
+Install pip.
+Configure virtualenv and virtualenvwrapper
+Once virtual environment is created and activated, enter the command pip install Django to install Django
+
+10. How to install the development version of Django
+Follow the below steps to Install the development version of Django Framework.
+Check out Django’s main development branch
+$ git clone https://github.com/django/django.git
+Make sure that the Python interpreter can load Django’s code. The most convenient way to do this is to use virtualenv, virtualenvwrapper, and pip.
+After setting up and activating the virtualenv, run the following command:
+$ pip install -e django/
+Source:https://docs.djangoproject.com/en/2.0/topics/install/
+
+
 13. How to check installed version of Django?
 By running below command on Terminal.You can check installed version of Django Framework.
 py -m django --version
 
+1. List server requirement to install Django Framework.
+As Django is Python Framework, in order to install Django Python is required.Django comes with an inbuilt lightweight web server that you can use for the testing purpose.If you are using Django on production Apache with mod_wsgi is required.
 
 
 Basics of Django:
+14. What do you understand by Django?
+Django is a free and open source web application framework, written in Python. Django is named after Django Reinhardt, Jazz guitarist from the 1930s to early 1950s who is one of the best guitarists of all time. Django was mainly developed to handle the intensive design of the newsroom. You can even build high-quality web applications using this. It adheres to the DRY principle and focuses completely on automating as much as possible.
+
+7. Name the features available in Django web framework?
+Features available in Django web framework are:
+Admin Interface (CRUD)
+Templating
+Form handling
+Internationalization
+Session, user management, role-based permissions
+Object-relational mapping (ORM)
+Testing Framework
+Fantastic Documentation
+
+8. Is Django stable or not?
+Of course, Django is stable. Most of the companies are using it.
+
+14. Is Django free?
+Yes, Django is free open source web framework for Python
+
+6. When and who create Django?
+According to https://en.wikipedia.org/wiki/Django_(web_framework), Django was created in the fall of 2003, when the web programmers at the Lawrence Journal-World newspaper, Adrian Holovaty and Simon Willison, began using Python to build applications. It was released publicly under a BSD license in July 2005. The framework was named after guitarist Django Reinhardt.
+
 11. What is the name of the Foundation which manages Django web framework?
 Django web framework is managed and maintained by an independent and non-profit organization named Django Software Foundation (DSF).
 
 9. Is Django a high level or low-level framework?
 Django is a high-level Python’s web framework which was designed for rapid development and clean realistic design.
+
+
+Project creation:
+3. What is the process of creating a project in Django?
 
 
 
@@ -35,6 +80,10 @@ Django-admin.py: It is a Django’s command line utility for administrative task
 It puts your project’s package on sys.path.
 It sets the DJANGO_SETTING_MODULE environment variable to points to your project’s setting.py file.
 
+Models.py file: This file defines your data model by extending your single code line into full database tables and add a pre-built administration section to manage content.
+Urls.py file: It uses a habitual expression to confine URL patterns for processing.
+Views.py file: It is the main part of Django. The actual processing happens in view.
+
 
 
 Request and Response:
@@ -50,9 +99,41 @@ If the matched URL pattern returned no named groups, then the matches from the r
 The keyword arguments are made up of any named parts matched by the path expression, overridden by any arguments specified in the optional kwargs argument to django.urls.path() or django.urls.re_path().
 If no URL pattern matches, or if an exception is raised during any point in this process, Django invokes an appropriate error-handling view.
 
+11. What is a context in Django?
+In Django Context is a dictionary with variable names in the form of key and value like {varible1: 101, varible2: 102},when we pass this context to the template render method, {{ varible1 }} would be replaced with 101 and {{ varible2 }} with 102 in your template.
+
+
+
+Views:
+7) Give an example how you can write a VIEW in Django?
+Views are Django functions that take a request and return a response.  To write a view in Django we take a simple example of “Guru99_home” which uses the template Guru99_home.html and uses the date-time module to tell us what the time is whenever the page is refreshed.  The file we required to edit is called view.py, and it will be inside mysite/myapp/
+Copy the below code into it and save the file
+from datatime import datetime
+from django.shortcuts import render
+def home (request):
+	return render(request, ‘Guru99_home.html’, {‘right_now’: datetime.utcnow()})
+Once you have determined the VIEW, you can uncomment this line in urls.py
+# url ( r ‘^$’ , ‘mysite.myapp.views.home’ , name ‘Guru99’),
+The last step will reload your web app so that the changes are noticed by the web server.
+
 
 
 Models and Migrations:
+14. How to Configure Database in Django or Explain how you can set up the Database in Django?
+You can use the command edit mysite/setting.py , it is a normal python module with module level representing Django settings.
+Django uses SQLite by default; it is easy for Django users as such it won’t require any other type of installation. In the case your database choice is different that you have to the following keys in the DATABASE ‘default’ item to match your database connection settings
+Engines: you can change database by using ‘django.db.backends.sqlite3’ , ‘django.db.backeneds.mysql’, ‘django.db.backends.postgresql_psycopg2’, ‘django.db.backends.oracle’ and so on
+Name: The name of your database. In the case if you are using SQLite as your database, in that case database will be a file on your computer, Name should be a full absolute path, including file name of that file.
+If you are not choosing SQLite as your database then setting like Password, Host, User, etc. must be added.
+
+
+13. What does Of Django Field Class types do?
+Following points are specified by the Django Field Class type: –
+
+It specifies the database column type.
+It also specifies the default HTML widget which is availed while we render the form field.
+The requirements of the minimal validation which is used in Django admin is also specified by the field class.
+
 4. Where are Django migrations stored?
 You can think Django Migrations as version control system for your database/Model. It keeps track of changes done in your application Models/Table like adding a field, deleting a model, etc. Migrations in Django are stored as an on-disk format, referred to here as “migration files”. These files are actually just normal Python files with an agreed-upon object layout, written in a declarative style. A basic migration file looks like this:
 
@@ -71,24 +152,47 @@ Further Reading https://docs.djangoproject.com/en/2.0/topics/migrations/
 
 5. List type of inheritance supported in Django?
 Django supports 3 types of inheritance. They are
-
 Abstract base classes
 Multi-table Inheritance
 Proxy models
 
+6. List the database backends supported by Django Framework?
+Django officially supports four database backends, they are
+PostgreSQL
+MySQL
+SQLite
+Oracle
+In addition to these, you can also use following 3rd parties
+SAP SQL Anywhere
+IBM DB2
+Microsoft SQL Server
+Firebird
+ODBC
+
+
 
 Middlewares:
+7. What is some typical usage of middlewares in Django?
+Middleware is a function that acts on or transforms a request/response before/after it passes through the view layer (e.g. adding the user object to the request)
+Some usage of middlewares in Django is:
+It can be used for Session management,
+User authentication can be done with the help of this.
+It helps in Cross-site request forgery protection
+Content Gzipping, etc.
+
+
 a. Session:
 10. What is the use of session framework in Django?
 The session framework helps you in storing and retrieving arbitrary data on a per-site visitor basis. The data is stored on the server side and abstracts the receiving and sending of cookies. We can implement sessions through a piece of middleware.
 
 6. How to set/unset session in Django?
 Setting Session in Django
-
 request.session['key'] = 'value'
 Unset Session in Django
-
 del request.session['key']
+
+15. How to use file based sessions?
+You have to set the SESSION_ENGINE settings to “django.contrib.sessions.backends.file” to use file-based session.
 
 
 Caching:
@@ -100,9 +204,32 @@ In-memory caching
 Using Memcached
 Database caching
 
+Signals:
+8. What are signals in Django?
+Signal are inbuilt utility in Django. They allow to execute some piece of code based on some action or event is occurred in framework something like a new user register, on delete of a record.
+Below is the list of some inbuilt signal in Django.
+pre_save and post_save.
+pre_delete and post_delete
+pre_request and post_request
+pre_request and post_request
+
+Settings:
+11. How can you set up static files in Django?
+Basically, we require three main things to set up static files in Django:
+1) Set STATIC_ROOT in settings.py
+2) Run manage.py collect static
+3) Set up a Static Files entry on the PythonAnywhere web tab
+
+
 
 Custom features:
 15. How to create an Constant in Django.
 To create a constant in Django. Open your settings.py file and add a variable like MY_CONST = “MY_VALUE”.
 To use this constant in your views simply import setting like “Import settings in views.py” and use it as
 settings.MY_CONST
+
+4. How to get current page URI in Django template.
+You can use {{ request.path }} and {{ request.get_full_path }} to get current page URI in Django template
+
+5. When QuerySets are evaluated in Django?
+In Django, a QuerySet can be evaluated in Iteration, Slicing, Pickling/Caching, repr(),len(), list() and bool().
